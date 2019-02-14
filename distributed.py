@@ -35,11 +35,11 @@ def main(unused_argv):
     if FLAGS.job_name is None or FLAGS.job_name == '':
         raise ValueError('Must specify an explicit job_name !')
     else:
-        print 'job_name : %s' % FLAGS.job_name
+        print('job_name : %s' % FLAGS.job_name)
     if FLAGS.task_index is None or FLAGS.task_index == '':
         raise ValueError('Must specify an explicit task_index!')
     else:
-        print 'task_index : %d' % FLAGS.task_index
+        print('task_index : %d' % FLAGS.task_index)
 
     ps_spec = FLAGS.ps_hosts.split(',')
     worker_spec = FLAGS.worker_hosts.split(',')
@@ -85,14 +85,14 @@ def main(unused_argv):
                                  global_step=global_step)
 
         if is_chief:
-            print 'Worker %d: Initailizing session...' % FLAGS.task_index
+            print('Worker %d: Initailizing session...' % FLAGS.task_index)
         else:
-            print 'Worker %d: Waiting for session to be initaialized...' % FLAGS.task_index
+            print('Worker %d: Waiting for session to be initaialized...' % FLAGS.task_index)
         sess = sv.prepare_or_wait_for_session(server.target)
-        print 'Worker %d: Session initialization  complete.' % FLAGS.task_index
+        print('Worker %d: Session initialization  complete.' % FLAGS.task_index)
 
         time_begin = time.time()
-        print 'Traing begins @ %f' % time_begin
+        print('Traing begins @ %f' % time_begin)
 
         local_step = 0
         while True:
@@ -103,20 +103,21 @@ def main(unused_argv):
             local_step += 1
 
             now = time.time()
-            print '%f: Worker %d: traing step %d dome (global step:%d)' % (now, FLAGS.task_index, local_step, step)
+            print('%f: Worker %d: traing step %d dome (global step:%d)' % (now, FLAGS.task_index, local_step, step))
 
             if step >= FLAGS.train_steps:
                 break
 
         time_end = time.time()
-        print 'Training ends @ %f' % time_end
+        print('Training ends @ %f' % time_end)
         train_time = time_end - time_begin
-        print 'Training elapsed time:%f s' % train_time
+        print('Training elapsed time:%f s' % train_time)
 
         val_feed = {x: mnist.validation.images, y_: mnist.validation.labels}
         val_xent = sess.run(cross_entropy, feed_dict=val_feed)
-        print 'After %d training step(s), validation cross entropy = %g' % (FLAGS.train_steps, val_xent)
+        print('After %d training step(s), validation cross entropy = %g' % (FLAGS.train_steps, val_xent))
     sess.close()
+
 
 if __name__ == '__main__':
     tf.app.run()
